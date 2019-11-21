@@ -19,8 +19,17 @@ class AdventureGame(arcade.Window):
     def on_draw(self):
         pass
 
-    
 
+class P_lev1(arcade.Sprite):
+    pass
+
+
+class P_lev2(arcade.Sprite):
+    pass
+
+
+class P_lev3(arcade.Sprite):
+    pass
 
 def main():
     window = AdventureGame()
