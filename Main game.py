@@ -16,7 +16,10 @@ class AdventureGame(arcade.Window):
         arcade.set_background_color(arcade.color.PICTON_BLUE)
 
     def setup(self):
-        self.levels_list = arcade.SpriteList
+        self.levels_list = arcade.SpriteList()
+        self.levels_list.append(P_lev1())
+        self.levels_list.append(P_lev2())
+        self.levels_list.append(P_lev3())
 
     def on_draw(self):
         pass
