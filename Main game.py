@@ -1,7 +1,7 @@
 import arcade
 
 WINDOW_WIDTH = 10000
-WINDOW_HEIGHT = 1000
+WINDOW_HEIGHT = 750
 GAME_TITLE = "Adventure Game"
 
 player_lev1 = arcade.load_texture("images/manP1.png")
@@ -22,11 +22,15 @@ class AdventureGame(arcade.Window):
         self.levels_list.append(P_lev3())
 
     def on_draw(self):
-        pass
+        arcade.start_render()
 
 
 class P_lev1(arcade.Sprite):
-    pass
+    def __init__(self):
+        super().__init__("images/manP1.png")
+        self.player_sprite1 = arcade.Sprite("images/manP1.png",.5)
+        self.player_sprite1.center_x = 100
+        self.player_sprite1.center_y = 100
 
 
 class P_lev2(arcade.Sprite):
