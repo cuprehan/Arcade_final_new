@@ -6,6 +6,7 @@ GAME_TITLE = "Adventure Game"
 
 CHARACTER_SCALING = 1
 
+GARVITY = .5
 LEFT_VIEWPORT_MARGIN = 150
 RIGHT_VIEWPORT_MARGIN = 50
 BOTTOM_VIEWPORT_MARGIN = 50
@@ -23,7 +24,7 @@ class AdventureGame(arcade.Window):
         arcade.set_background_color(arcade.color.PICTON_BLUE)
 
     def setup(self):
-        self.player_sprite = arcade.Sprite("images/caveman.png", .5)
+        self.player_sprite = P_lev1()
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
         self.food_list = arcade.SpriteList()
@@ -51,7 +52,7 @@ class AdventureGame(arcade.Window):
             spike = arcade.Sprite("images/spike.png", .3)
             spike.position = coordinate
             self.spike_list.append(spike)
-        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, 0.5)
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GARVITY)
 
     def on_draw(self):
         arcade.start_render()
@@ -59,16 +60,19 @@ class AdventureGame(arcade.Window):
         self.food_list.draw()
         self.spike_list.draw()
         self.player_sprite.draw()
+        health_text = f"Health: {self.player_sprite.HEALTH}"
+        arcade.draw_text(health_text, 10 + self.view_left, 10 + self.view_bottom,
+                         arcade.csscolor.RED, 18)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
         if key == arcade.key.UP or key == arcade.key.W:
             if self.physics_engine.can_jump():
-                self.player_sprite.change_y = 15
+                self.player_sprite.change_y = self.player_sprite.JUMP_HEIGHT
         elif key == arcade.key.LEFT or key == arcade.key.A:
-            self.player_sprite.change_x = -15
+            self.player_sprite.change_x = -self.player_sprite.SPEED
         elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.player_sprite.change_x = 15
+            self.player_sprite.change_x = self.player_sprite.SPEED
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -133,25 +137,25 @@ class AdventureGame(arcade.Window):
 #        super().__init__("images/manP1.png")
 
 class P_lev1(arcade.Sprite):
-    def __init__(self, **kwargs):
+    def __init__(self):
         self.SPEED = 15
         self.JUMP_HEIGHT = 15
         self.HEALTH = 2
-        super().__init__(kwargs)
+        super().__init__("images/caveman.png", .5)
 
 class P_lev2(arcade.Sprite):
-    def __init__(self, **kwargs):
+    def __init__(self, image, size):
         self.SPEED = 20
         self.JUMP_HEIGHT = 20
         self.HEALTH = 4
-        super().__init__(kwargs)
+        super().__init__("images/caveman.png", .75)
 
 class P_lev3(arcade.Sprite):
-    def __init__(self, **kwargs):
+    def __init__(self, image, size):
         self.SPEED = 25
         self.JUMP_HEIGHT = 25
         self.HEALTH = 6
-        super().__init__(kwargs)
+        super().__init__("images/caveman.png1", .5)
 
 def main():
     window = AdventureGame()
