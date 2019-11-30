@@ -17,7 +17,13 @@ class AdventureGame(arcade.Window):
         self.player_sprite = arcade.Sprite("images/caveman.png", .5)
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
+        self.food_list = arcade.SpriteList()
+        self.food_coordinates = [[800, 400]]
         self.wall_list = arcade.SpriteList()
+        for coordinate in self.food_coordinates:
+            food = arcade.Sprite("images/food.png", .3)
+            food.position = coordinate
+            self.food_list.append(food)
         coordinate_list = [[100, 96],
                            [500, 96],
                            [900, 96],
@@ -33,6 +39,7 @@ class AdventureGame(arcade.Window):
     def on_draw(self):
         arcade.start_render()
         self.wall_list.draw()
+        self.food_list.draw()
         self.player_sprite.draw()
 
     def on_key_press(self, key, modifiers):
