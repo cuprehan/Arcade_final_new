@@ -6,7 +6,7 @@ GAME_TITLE = "Adventure Game"
 
 CHARACTER_SCALING = 1
 
-GARVITY = .5
+GRAVITY = .5
 LEFT_VIEWPORT_MARGIN = 150
 RIGHT_VIEWPORT_MARGIN = 50
 BOTTOM_VIEWPORT_MARGIN = 50
@@ -24,6 +24,7 @@ class AdventureGame(arcade.Window):
         arcade.set_background_color(arcade.color.PICTON_BLUE)
 
     def setup(self):
+        self.game_status = " "
         self.player_sprite = P_lev1()
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
@@ -35,7 +36,6 @@ class AdventureGame(arcade.Window):
                                  [1800, 400],
                                  [900, 400]
                                 ]
-        self.wall_list = arcade.SpriteList()
 
         food_number = 1
         for coordinate in self.food_coordinates:
@@ -45,23 +45,32 @@ class AdventureGame(arcade.Window):
                 food_number = 1
             food.position = coordinate
             self.food_list.append(food)
-        coordinate_list = [[100, 96],
+
+        self.wall_list = arcade.SpriteList()
+        coordinate_list1 = [[100, 96],
                            [500, 196],
                            [900, 96],
                            [1300, 96],
-                           [1700, 196],
                            [2100, 96],
                            [2500, 96],
                            [2900, 96]]
 
-        for coordinate in coordinate_list:
+        for coordinate in coordinate_list1:
             # Add a crate on the ground
             wall = arcade.Sprite("images/prehistoric_wall.png", 1)
             wall.position = coordinate
             self.wall_list.append(wall)
+
+
+        coordinate_list2 = [[1700, 196]]
+        for coordinate in coordinate_list2:
+            tall_wall = arcade.Sprite("images/tall_wall.png", 1)
+            tall_wall.position = coordinate
+            self.wall_list.append(tall_wall)
+
         self.spike_list = arcade.SpriteList()
-        self.spike_coordinates = [[1300, 200]]
-        for coordinate in self.spike_coordinates:
+        spike_coordinates = [[1300, 200]]
+        for coordinate in spike_coordinates:
             spike = arcade.Sprite("images/fire.png", .5)
             spike.position = coordinate
             self.spike_list.append(spike)
@@ -79,7 +88,7 @@ class AdventureGame(arcade.Window):
             door = arcade.Sprite("images/cave.png", 1)
             door.position = coordinate
             self.door_list.append(door)
-        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GARVITY)
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
     def on_draw(self):
         arcade.start_render()
@@ -92,6 +101,10 @@ class AdventureGame(arcade.Window):
         health_text = f"Health: {self.player_sprite.HEALTH}"
         arcade.draw_text(health_text, 10 + self.view_left, 10 + self.view_bottom,
                          arcade.csscolor.RED, 18)
+
+        game_text = self.game_status
+        arcade.draw_text(game_text, 400 + self.view_left, 400 + self.view_bottom,
+                         arcade.csscolor.RED, 26)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -133,7 +146,7 @@ class AdventureGame(arcade.Window):
             temp_sprite.HEALTH = self.player_sprite.HEALTH
             temp_sprite.position = self.player_sprite.position
             self.player_sprite = temp_sprite
-            self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GARVITY)
+            self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
         spike_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                               self.spike_list)
@@ -144,6 +157,13 @@ class AdventureGame(arcade.Window):
             # if the character sprite is not removed from the spike, the health score keeps rolling down
             # move the character away from the spike to prevent that
             self.player_sprite.left = self.player_sprite.left - 100
+
+        door_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
+                                                              self.door_list)
+        # Look if the character entered the door
+        for door in door_hit_list:
+            self.game_status = "You WON!"
+
         if(self.health_change):
             if(self.player_sprite.HEALTH >= 6):
                 temp_sprite = P_lev3()
@@ -162,10 +182,10 @@ class AdventureGame(arcade.Window):
                 self.player_sprite = temp_sprite
             elif(self.player_sprite.HEALTH <= 0):
                 # this is death, end of game
-                pass
+                self.game_status = "Game OVER!"
             self.health_change = False
             #if the new sprite object was created we have to create new platformer with that character
-            self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GARVITY)
+            self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
         # --- Manage Scrolling ---
         # Track if we need to change the viewport
