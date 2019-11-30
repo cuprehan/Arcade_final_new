@@ -1,13 +1,13 @@
 import arcade
 
-WINDOW_WIDTH = 10000
+WINDOW_WIDTH = 900
 WINDOW_HEIGHT = 750
 GAME_TITLE = "Adventure Game"
 
 CHARACTER_SCALING = 1
 
 LEFT_VIEWPORT_MARGIN = 150
-RIGHT_VIEWPORT_MARGIN = 150
+RIGHT_VIEWPORT_MARGIN = 50
 BOTTOM_VIEWPORT_MARGIN = 50
 TOP_VIEWPORT_MARGIN = 100
 
@@ -30,25 +30,34 @@ class AdventureGame(arcade.Window):
         self.food_coordinates = [[800, 400]]
         self.wall_list = arcade.SpriteList()
         for coordinate in self.food_coordinates:
-            food = arcade.Sprite("images/food.png", .3)
+            food = arcade.Sprite("images/food.png", .25)
             food.position = coordinate
             self.food_list.append(food)
         coordinate_list = [[100, 96],
-                           [500, 96],
+                           [500, 196],
                            [900, 96],
-                           [1300, 96]]
+                           [1300, 96],
+                           [1700, 196],
+                           [2100, 96]]
 
         for coordinate in coordinate_list:
             # Add a crate on the ground
             wall = arcade.Sprite("images/prehistoric_wall.png", 1)
             wall.position = coordinate
             self.wall_list.append(wall)
+        self.spike_list = arcade.SpriteList()
+        self.spike_coordinates = [[1300, 200]]
+        for coordinate in self.spike_coordinates:
+            spike = arcade.Sprite("images/spike.png", .3)
+            spike.position = coordinate
+            self.spike_list.append(spike)
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, 0.5)
 
     def on_draw(self):
         arcade.start_render()
         self.wall_list.draw()
         self.food_list.draw()
+        self.spike_list.draw()
         self.player_sprite.draw()
 
     def on_key_press(self, key, modifiers):
@@ -92,7 +101,7 @@ class AdventureGame(arcade.Window):
         # Scroll right
         right_boundary = self.view_left + WINDOW_WIDTH - RIGHT_VIEWPORT_MARGIN
         if self.player_sprite.right > right_boundary:
-            self.view_left += self.player_sprite.right - right_boundary
+            self.view_left += self.player_sprite.right + right_boundary
             changed = True
 
         # Scroll up
