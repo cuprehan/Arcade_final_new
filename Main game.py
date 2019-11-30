@@ -18,16 +18,17 @@ class AdventureGame(arcade.Window):
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
         self.wall_list = arcade.SpriteList()
-        coordinate_list = [[512, 96],
-                           [256, 96],
-                           [768, 96]]
+        coordinate_list = [[100, 96],
+                           [500, 96],
+                           [900, 96],
+                           [1300, 96]]
 
         for coordinate in coordinate_list:
             # Add a crate on the ground
             wall = arcade.Sprite("images/prehistoric_wall.png", 1)
             wall.position = coordinate
             self.wall_list.append(wall)
-        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, 1)
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, 0.5)
 
     def on_draw(self):
         arcade.start_render()
@@ -37,21 +38,17 @@ class AdventureGame(arcade.Window):
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
         if key == arcade.key.UP or key == arcade.key.W:
-            self.player_sprite.change_y = 5
-        elif key == arcade.key.DOWN or key == arcade.key.S:
-            self.player_sprite.change_y = -5
+            if self.physics_engine.can_jump():
+                self.player_sprite.change_y = 15
         elif key == arcade.key.LEFT or key == arcade.key.A:
-            self.player_sprite.change_x = -5
+            self.player_sprite.change_x = -15
         elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.player_sprite.change_x = 5
+            self.player_sprite.change_x = 15
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
-        if key == arcade.key.UP or key == arcade.key.W:
-            self.player_sprite.change_y = 0
-        elif key == arcade.key.DOWN or key == arcade.key.S:
-            self.player_sprite.change_y = 0
-        elif key == arcade.key.LEFT or key == arcade.key.A:
+
+        if key == arcade.key.LEFT or key == arcade.key.A:
             self.player_sprite.change_x = 0
         elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = 0
