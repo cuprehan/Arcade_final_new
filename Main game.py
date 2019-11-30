@@ -28,10 +28,21 @@ class AdventureGame(arcade.Window):
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
         self.food_list = arcade.SpriteList()
-        self.food_coordinates = [[800, 400]]
+        self.food_coordinates = [
+                                 [100, 400],
+                                 [500, 400],
+                                 [1400, 400],
+                                 [1800, 400],
+                                 [900, 400]
+                                ]
         self.wall_list = arcade.SpriteList()
+
+        food_number = 1
         for coordinate in self.food_coordinates:
-            food = arcade.Sprite("images/food.png", .25)
+            food = arcade.Sprite("images/food"+str(food_number)+".png", .25)
+            food_number = food_number + 1
+            if(food_number > 3):
+                food_number = 1
             food.position = coordinate
             self.food_list.append(food)
         coordinate_list = [[100, 96],
@@ -49,7 +60,7 @@ class AdventureGame(arcade.Window):
         self.spike_list = arcade.SpriteList()
         self.spike_coordinates = [[1300, 200]]
         for coordinate in self.spike_coordinates:
-            spike = arcade.Sprite("images/spike.png", .3)
+            spike = arcade.Sprite("images/fire.png", .3)
             spike.position = coordinate
             self.spike_list.append(spike)
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GARVITY)
@@ -86,13 +97,47 @@ class AdventureGame(arcade.Window):
         """ Movement and game logic """
         self.physics_engine.update()
 
+        self.health_change = False
+
         food_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                              self.food_list)
-
         # Loop through each food we hit (if any) and remove it
         for food in food_hit_list:
             food.remove_from_sprite_lists()
+            self.player_sprite.HEALTH = self.player_sprite.HEALTH + 1
+            self.health_change = True
 
+        spike_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
+                                                              self.spike_list)
+        # Loop through spike hits and remove the health score
+        for spike in spike_hit_list:
+            self.player_sprite.HEALTH = self.player_sprite.HEALTH - 1
+            self.health_change = True
+            # if the character sprite is not removed from the spike, the health score keeps rolling down
+            # move the character away from the spike to prevent that
+            self.player_sprite.left = self.player_sprite.left - 100
+        if(self.health_change):
+            if(self.player_sprite.HEALTH >= 6):
+                temp_sprite = P_lev3()
+                temp_sprite.HEALTH = self.player_sprite.HEALTH
+                temp_sprite.position = self.player_sprite.position
+                self.player_sprite = temp_sprite
+            elif(self.player_sprite.HEALTH >= 4):
+                temp_sprite = P_lev2()
+                temp_sprite.HEALTH = self.player_sprite.HEALTH
+                temp_sprite.position = self.player_sprite.position
+                self.player_sprite = temp_sprite
+            elif(self.player_sprite.HEALTH < 4 and self.player_sprite.HEALTH > 0):
+                temp_sprite = P_lev1()
+                temp_sprite.HEALTH = self.player_sprite.HEALTH
+                temp_sprite.position = self.player_sprite.position
+                self.player_sprite = temp_sprite
+            elif(self.player_sprite.HEALTH <= 0):
+                pass
+            self.health_change = False
+            #if the new sprite object was created we have to create new platformer with that character
+            self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GARVITY)
+                #this is death, end of game
         # --- Manage Scrolling ---
         # Track if we need to change the viewport
         changed = False
@@ -144,18 +189,18 @@ class P_lev1(arcade.Sprite):
         super().__init__("images/caveman.png", .5)
 
 class P_lev2(arcade.Sprite):
-    def __init__(self, image, size):
+    def __init__(self):
         self.SPEED = 20
         self.JUMP_HEIGHT = 20
         self.HEALTH = 4
-        super().__init__("images/caveman.png", .75)
+        super().__init__("images/caveman2.png", 1.25)
 
 class P_lev3(arcade.Sprite):
-    def __init__(self, image, size):
+    def __init__(self):
         self.SPEED = 25
         self.JUMP_HEIGHT = 25
         self.HEALTH = 6
-        super().__init__("images/caveman.png1", .5)
+        super().__init__("images/caveman1.png", .5)
 
 def main():
     window = AdventureGame()
