@@ -24,6 +24,7 @@ class AdventureGame(arcade.Window):
         arcade.set_background_color(arcade.color.PICTON_BLUE)
 
     def setup(self):
+        self.HAS_KEY = False
         self.game_status = " "
         self.player_sprite = P_lev1()
         self.player_sprite.center_x = 100
@@ -76,8 +77,8 @@ class AdventureGame(arcade.Window):
             self.spike_list.append(spike)
 
         self.key_list = arcade.SpriteList()
-        self.key_coordinates = [[2300, 600]]
-        for coordinate in self.key_coordinates:
+        key_coordinates = [[2300, 600]]
+        for coordinate in key_coordinates:
             key = arcade.Sprite("images/torch.png", .3)
             key.position = coordinate
             self.key_list.append(key)
@@ -146,6 +147,7 @@ class AdventureGame(arcade.Window):
             temp_sprite.HEALTH = self.player_sprite.HEALTH
             temp_sprite.position = self.player_sprite.position
             self.player_sprite = temp_sprite
+            self.HAS_KEY = True
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
         spike_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
@@ -158,11 +160,14 @@ class AdventureGame(arcade.Window):
             # move the character away from the spike to prevent that
             self.player_sprite.left = self.player_sprite.left - 100
 
+
         door_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
-                                                              self.door_list)
+                                                             self.door_list)
         # Look if the character entered the door
         for door in door_hit_list:
-            self.game_status = "You WON!"
+            if self.HAS_KEY:
+                self.game_status = "YOU WON!"
+
 
         if(self.health_change):
             if(self.player_sprite.HEALTH >= 6):
