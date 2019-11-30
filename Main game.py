@@ -65,13 +65,20 @@ class AdventureGame(arcade.Window):
             spike = arcade.Sprite("images/fire.png", .5)
             spike.position = coordinate
             self.spike_list.append(spike)
-        self.key_list = arcade.SpriteList()
 
+        self.key_list = arcade.SpriteList()
         self.key_coordinates = [[2300, 600]]
         for coordinate in self.key_coordinates:
             key = arcade.Sprite("images/torch.png", .3)
             key.position = coordinate
             self.key_list.append(key)
+
+        self.door_list = arcade.SpriteList()
+        self.door_coordinates = [[2500, 300]]
+        for coordinate in self.door_coordinates:
+            door = arcade.Sprite("images/cave.png", 1)
+            door.position = coordinate
+            self.door_list.append(door)
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GARVITY)
 
     def on_draw(self):
@@ -80,6 +87,7 @@ class AdventureGame(arcade.Window):
         self.food_list.draw()
         self.spike_list.draw()
         self.key_list.draw()
+        self.door_list.draw()
         self.player_sprite.draw()
         health_text = f"Health: {self.player_sprite.HEALTH}"
         arcade.draw_text(health_text, 10 + self.view_left, 10 + self.view_bottom,
