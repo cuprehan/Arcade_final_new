@@ -132,14 +132,26 @@ class AdventureGame(arcade.Window):
 #    def __init__(self):
 #        super().__init__("images/manP1.png")
 
-
+class P_lev1(arcade.Sprite):
+    def __init__(self, **kwargs):
+        self.SPEED = 15
+        self.JUMP_HEIGHT = 15
+        self.HEALTH = 2
+        super().__init__(kwargs)
 
 class P_lev2(arcade.Sprite):
-    pass
-
+    def __init__(self, **kwargs):
+        self.SPEED = 20
+        self.JUMP_HEIGHT = 20
+        self.HEALTH = 4
+        super().__init__(kwargs)
 
 class P_lev3(arcade.Sprite):
-    pass
+    def __init__(self, **kwargs):
+        self.SPEED = 25
+        self.JUMP_HEIGHT = 25
+        self.HEALTH = 6
+        super().__init__(kwargs)
 
 def main():
     window = AdventureGame()
