@@ -50,7 +50,9 @@ class AdventureGame(arcade.Window):
                            [900, 96],
                            [1300, 96],
                            [1700, 196],
-                           [2100, 96]]
+                           [2100, 96],
+                           [2500, 96],
+                           [2900, 96]]
 
         for coordinate in coordinate_list:
             # Add a crate on the ground
@@ -60,9 +62,16 @@ class AdventureGame(arcade.Window):
         self.spike_list = arcade.SpriteList()
         self.spike_coordinates = [[1300, 200]]
         for coordinate in self.spike_coordinates:
-            spike = arcade.Sprite("images/fire.png", .3)
+            spike = arcade.Sprite("images/fire.png", .5)
             spike.position = coordinate
             self.spike_list.append(spike)
+        self.key_list = arcade.SpriteList()
+
+        self.key_coordinates = [[2300, 600]]
+        for coordinate in self.key_coordinates:
+            key = arcade.Sprite("images/torch.png", .3)
+            key.position = coordinate
+            self.key_list.append(key)
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GARVITY)
 
     def on_draw(self):
@@ -70,6 +79,7 @@ class AdventureGame(arcade.Window):
         self.wall_list.draw()
         self.food_list.draw()
         self.spike_list.draw()
+        self.key_list.draw()
         self.player_sprite.draw()
         health_text = f"Health: {self.player_sprite.HEALTH}"
         arcade.draw_text(health_text, 10 + self.view_left, 10 + self.view_bottom,
@@ -107,6 +117,16 @@ class AdventureGame(arcade.Window):
             self.player_sprite.HEALTH = self.player_sprite.HEALTH + 1
             self.health_change = True
 
+        key_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
+                                                             self.key_list)
+        for key in key_hit_list:
+            key.remove_from_sprite_lists()
+            temp_sprite = P_key()
+            temp_sprite.HEALTH = self.player_sprite.HEALTH
+            temp_sprite.position = self.player_sprite.position
+            self.player_sprite = temp_sprite
+            self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GARVITY)
+
         spike_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                               self.spike_list)
         # Loop through spike hits and remove the health score
@@ -133,11 +153,12 @@ class AdventureGame(arcade.Window):
                 temp_sprite.position = self.player_sprite.position
                 self.player_sprite = temp_sprite
             elif(self.player_sprite.HEALTH <= 0):
+                # this is death, end of game
                 pass
             self.health_change = False
             #if the new sprite object was created we have to create new platformer with that character
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GARVITY)
-                #this is death, end of game
+
         # --- Manage Scrolling ---
         # Track if we need to change the viewport
         changed = False
@@ -184,23 +205,30 @@ class AdventureGame(arcade.Window):
 class P_lev1(arcade.Sprite):
     def __init__(self):
         self.SPEED = 15
-        self.JUMP_HEIGHT = 15
+        self.JUMP_HEIGHT = 12
         self.HEALTH = 2
         super().__init__("images/caveman.png", .5)
 
 class P_lev2(arcade.Sprite):
     def __init__(self):
         self.SPEED = 20
-        self.JUMP_HEIGHT = 20
+        self.JUMP_HEIGHT = 17
         self.HEALTH = 4
         super().__init__("images/caveman2.png", 1.25)
 
 class P_lev3(arcade.Sprite):
     def __init__(self):
         self.SPEED = 25
-        self.JUMP_HEIGHT = 25
+        self.JUMP_HEIGHT = 20
         self.HEALTH = 6
         super().__init__("images/caveman1.png", .5)
+
+class P_key(arcade.Sprite):
+    def __init__(self):
+        self.SPEED = 25
+        self.JUMP_HEIGHT = 17
+        self.HEALTH = 6
+        super().__init__("images/caveman3.png", 1.25)
 
 def main():
     window = AdventureGame()
