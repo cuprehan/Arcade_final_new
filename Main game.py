@@ -5,13 +5,6 @@ WINDOW_HEIGHT = 750
 GAME_TITLE = "Adventure Game"
 
 CHARACTER_SCALING = 1
-TILE_SCALING = 0.5
-COIN_SCALING = 0.5
-
-
-player_lev1 = arcade.load_texture("images/manP1.png")
-player_lev2 = arcade.load_texture("images/simpson.png")
-player_lev3 = arcade.load_texture("images/kid_on_skateboard.png")
 
 
 class AdventureGame(arcade.Window):
@@ -21,18 +14,51 @@ class AdventureGame(arcade.Window):
         arcade.set_background_color(arcade.color.PICTON_BLUE)
 
     def setup(self):
-        self.levels_list = arcade.SpriteList()
-        self.player_sprite1 = arcade.Sprite("images/bnw.png", .5)
-        self.player_sprite1.center_x = 100
-        self.player_sprite1.center_y = 100
-        self.levels_list.append(self.player_sprite1)
-        #self.levels_list.append(P_lev1())
-        #self.levels_list.append(P_lev2())
-        #self.levels_list.append(P_lev3())
+        self.player_sprite = arcade.Sprite("images/caveman.png", .5)
+        self.player_sprite.center_x = 100
+        self.player_sprite.center_y = 100
+        self.wall_list = arcade.SpriteList()
+        coordinate_list = [[512, 96],
+                           [256, 96],
+                           [768, 96]]
+
+        for coordinate in coordinate_list:
+            # Add a crate on the ground
+            wall = arcade.Sprite("images/prehistoric_wall.png", 1)
+            wall.position = coordinate
+            self.wall_list.append(wall)
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, 1)
 
     def on_draw(self):
         arcade.start_render()
-        self.levels_list.draw()
+        self.wall_list.draw()
+        self.player_sprite.draw()
+
+    def on_key_press(self, key, modifiers):
+        """Called whenever a key is pressed. """
+        if key == arcade.key.UP or key == arcade.key.W:
+            self.player_sprite.change_y = 5
+        elif key == arcade.key.DOWN or key == arcade.key.S:
+            self.player_sprite.change_y = -5
+        elif key == arcade.key.LEFT or key == arcade.key.A:
+            self.player_sprite.change_x = -5
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
+            self.player_sprite.change_x = 5
+
+    def on_key_release(self, key, modifiers):
+        """Called when the user releases a key. """
+        if key == arcade.key.UP or key == arcade.key.W:
+            self.player_sprite.change_y = 0
+        elif key == arcade.key.DOWN or key == arcade.key.S:
+            self.player_sprite.change_y = 0
+        elif key == arcade.key.LEFT or key == arcade.key.A:
+            self.player_sprite.change_x = 0
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
+            self.player_sprite.change_x = 0
+
+    def on_update(self, delta_time):
+        """ Movement and game logic """
+        self.physics_engine.update()
 
 
 #class P_lev1(arcade.Sprite):
