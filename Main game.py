@@ -73,12 +73,16 @@ class AdventureGame(arcade.Window):
         """ Movement and game logic """
         self.physics_engine.update()
 
+        food_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
+                                                             self.food_list)
+
+        # Loop through each food we hit (if any) and remove it
+        for food in food_hit_list:
+            food.remove_from_sprite_lists()
+
         # --- Manage Scrolling ---
-
         # Track if we need to change the viewport
-
         changed = False
-
         # Scroll left
         left_boundary = self.view_left + LEFT_VIEWPORT_MARGIN
         if self.player_sprite.left < left_boundary:
