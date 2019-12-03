@@ -196,6 +196,7 @@ class AdventureGame(arcade.Window):
 
         # --- Manage Scrolling ---
         # Track if we need to change the viewport
+        # scrolling code from arcade.academy
         changed = False
         # Scroll left
         left_boundary = self.view_left + LEFT_VIEWPORT_MARGIN
