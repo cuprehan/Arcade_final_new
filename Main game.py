@@ -18,6 +18,7 @@ class AdventureGame(arcade.Window):
         self.levels_list = None
 
         # Used to keep track of our scrolling
+        # step 5 of scrolling tutorial on arcade.academy
         self.view_bottom = 0
         self.view_left = 0
 
@@ -108,7 +109,8 @@ class AdventureGame(arcade.Window):
                          arcade.csscolor.RED, 26)
 
     def on_key_press(self, key, modifiers):
-        """Called whenever a key is pressed. """
+        """Called whenever a key is pressed.
+        Code from arcade.academy"""
         if key == arcade.key.UP or key == arcade.key.W:
             if self.physics_engine.can_jump():
                 self.player_sprite.change_y = self.player_sprite.JUMP_HEIGHT
