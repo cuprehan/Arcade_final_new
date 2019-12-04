@@ -239,6 +239,7 @@ class AdventureGame(arcade.Window):
 #        super().__init__("images/manP1.png")
 
 class P_lev1(arcade.Sprite):
+    # Equivalent to the player being level 1. Starting sprite.
     def __init__(self):
         self.SPEED = 15
         self.JUMP_HEIGHT = 12
@@ -246,6 +247,7 @@ class P_lev1(arcade.Sprite):
         super().__init__("images/caveman.png", .5)
 
 class P_lev2(arcade.Sprite):
+    # Equivalent to the player leveling up to level 2. Speed and jump height increased.
     def __init__(self):
         self.SPEED = 20
         self.JUMP_HEIGHT = 17
@@ -253,6 +255,7 @@ class P_lev2(arcade.Sprite):
         super().__init__("images/caveman2.png", 1.25)
 
 class P_lev3(arcade.Sprite):
+    # Equivalent to the player leveling up to level 3. Speed and jump height increased.
     def __init__(self):
         self.SPEED = 25
         self.JUMP_HEIGHT = 20
