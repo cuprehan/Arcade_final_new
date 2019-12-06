@@ -52,7 +52,9 @@ class AdventureGame(arcade.Window):
         coordinate_list1 = [[100, 96],
                            [500, 196],
                            [900, 96],
+                            [900, 500],
                            [1300, 96],
+                            [1500,150],
                            [2100, 96],
                            [2500, 96],
                            [2900, 96]]
@@ -70,7 +72,8 @@ class AdventureGame(arcade.Window):
             self.wall_list.append(tall_wall)
 
         self.spike_list = arcade.SpriteList()
-        spike_coordinates = [[1300, 200]]
+        spike_coordinates = [[1300, 200],
+                             [1500,250]]
         for coordinate in spike_coordinates:
             spike = arcade.Sprite("images/fire.png", .5)
             spike.position = coordinate
@@ -168,6 +171,10 @@ class AdventureGame(arcade.Window):
             if self.HAS_KEY:
                 self.game_status = "YOU WON!"
 
+        if(self.player_sprite.center_y) < 100:
+            self.player_sprite.center_x = 100
+            self.player_sprite.center_y = 100
+            self.game_status = "Game OVER!"
 
         if(self.health_change):
             if(self.player_sprite.HEALTH >= 6):
@@ -188,15 +195,7 @@ class AdventureGame(arcade.Window):
             elif(self.player_sprite.HEALTH <= 0):
                 # this is death, end of game
                 self.game_status = "Game OVER!"
-                self.player_sprite.center_x = 100
-                self.player_sprite.center_y = 100
-                self.food_coordinates = [
-                    [100, 400],
-                    [500, 400],
-                    [1400, 400],
-                    [1800, 400],
-                    [900, 400]
-                ]
+
             self.health_change = False
             #if the new sprite object was created we have to create new platformer with that character
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
