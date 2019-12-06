@@ -155,11 +155,10 @@ class AdventureGame(arcade.Window):
                                                               self.spike_list)
         # Loop through spike hits and remove the health score
         for spike in spike_hit_list:
+            spike.remove_from_sprite_lists()
             self.player_sprite.HEALTH = self.player_sprite.HEALTH - 3
             self.health_change = True
-            # if the character sprite is not removed from the spike, the health score keeps rolling down
-            # move the character away from the spike to prevent that
-            self.player_sprite.left = self.player_sprite.left - 100
+
 
 
         door_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
@@ -191,6 +190,13 @@ class AdventureGame(arcade.Window):
                 self.game_status = "Game OVER!"
                 self.player_sprite.center_x = 100
                 self.player_sprite.center_y = 100
+                self.food_coordinates = [
+                    [100, 400],
+                    [500, 400],
+                    [1400, 400],
+                    [1800, 400],
+                    [900, 400]
+                ]
             self.health_change = False
             #if the new sprite object was created we have to create new platformer with that character
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
