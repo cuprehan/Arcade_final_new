@@ -63,7 +63,6 @@ class AdventureGame(arcade.Window):
             wall.position = coordinate
             self.wall_list.append(wall)
 
-
         coordinate_list2 = [[1700, 196]]
         for coordinate in coordinate_list2:
             tall_wall = arcade.Sprite("images/tall_wall.png", 1)
@@ -156,7 +155,7 @@ class AdventureGame(arcade.Window):
                                                               self.spike_list)
         # Loop through spike hits and remove the health score
         for spike in spike_hit_list:
-            self.player_sprite.HEALTH = self.player_sprite.HEALTH - 1
+            self.player_sprite.HEALTH = self.player_sprite.HEALTH - 3
             self.health_change = True
             # if the character sprite is not removed from the spike, the health score keeps rolling down
             # move the character away from the spike to prevent that
@@ -190,6 +189,8 @@ class AdventureGame(arcade.Window):
             elif(self.player_sprite.HEALTH <= 0):
                 # this is death, end of game
                 self.game_status = "Game OVER!"
+                self.player_sprite.center_x = 100
+                self.player_sprite.center_y = 100
             self.health_change = False
             #if the new sprite object was created we have to create new platformer with that character
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
@@ -234,9 +235,6 @@ class AdventureGame(arcade.Window):
                                 self.view_bottom,
                                 WINDOW_HEIGHT + self.view_bottom)
 
-#class P_lev1(arcade.Sprite):
-#    def __init__(self):
-#        super().__init__("images/manP1.png")
 
 class P_lev1(arcade.Sprite):
     # Equivalent to the player being level 1. Starting sprite.
@@ -263,9 +261,10 @@ class P_lev3(arcade.Sprite):
         super().__init__("images/caveman1.png", .5)
 
 class P_key(arcade.Sprite):
+    # class received after obtaining the torch to win the game.
     def __init__(self):
         self.SPEED = 25
-        self.JUMP_HEIGHT = 17
+        self.JUMP_HEIGHT = 20
         self.HEALTH = 6
         super().__init__("images/caveman3.png", 1.25)
 
@@ -277,3 +276,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
