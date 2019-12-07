@@ -13,6 +13,7 @@ BOTTOM_VIEWPORT_MARGIN = 50
 TOP_VIEWPORT_MARGIN = 100
 
 class AdventureGame(arcade.Window):
+    #the window for the game
     def __init__(self):
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE)
         self.levels_list = None
